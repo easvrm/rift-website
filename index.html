@@ -567,12 +567,15 @@ input::placeholder,textarea::placeholder{color:rgba(34,43,62,.4)}
           <div>&gt; +254 745 697 735 · www.rift.africa</div>
         </div>
       </div>
-      <form class="reveal" data-d="1" onsubmit="return false">
-        <div class="field"><label>Nom</label><div class="field-row"><input placeholder="Prénom"><input placeholder="Nom de famille"></div></div>
-        <div class="field"><label>Téléphone</label><input type="tel" placeholder="+254 …"></div>
-        <div class="field"><label>E-mail — obligatoire</label><input type="email" placeholder="vous@exemple.com" required></div>
-        <div class="field"><label>Message</label><textarea placeholder="Parlez-nous de votre projet…"></textarea></div>
-        <button class="btn btn-navy" type="submit" data-mag style="justify-self:start">Envoyer <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <form class="reveal" data-d="1" id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact">
+        <p style="position:absolute;left:-9999px"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="field"><label>Name</label><div class="field-row"><input name="first-name" placeholder="First name" required><input name="last-name" placeholder="Last name" required></div></div>
+        <div class="field"><label>Phone</label><input type="tel" name="phone" placeholder="+254 …"></div>
+        <div class="field"><label>Email — required</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="field"><label>Message</label><textarea name="message" placeholder="Tell us about your project…" required></textarea></div>
+        <button class="btn btn-navy" type="submit" data-mag style="justify-self:start">Send <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p id="contact-form-msg" style="margin-top:12px;font-size:14px"></p>
       </form>
     </div>
   </div>
@@ -641,6 +644,18 @@ $$('.meter-bar').forEach(el=>meterIO.observe(el));
   function tick(){steps.forEach((s,j)=>s.classList.toggle('on',j===i));fill.style.width=(i/(steps.length-1)*66.66)+'%';i=(i+1)%steps.length;}
   const io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!timer){tick();timer=setInterval(tick,1700)}else if(!e.isIntersecting&&timer){clearInterval(timer);timer=null}}),{threshold:.4});
   io2.observe(pipe);
+})();
+
+// contact form — AJAX submit to Netlify Forms
+(function(){const form=$('#contact-form');if(!form)return;const msg=$('#contact-form-msg');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const data=new FormData(form);
+    msg.textContent='Sending…';msg.style.color='';
+    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data).toString()})
+      .then(()=>{msg.textContent="Thanks — we'll be in touch shortly.";msg.style.color='var(--teal-deep)';form.reset();})
+      .catch(()=>{msg.textContent='Something went wrong — please email us directly at contact@rift.africa.';msg.style.color='#b3261e';});
+  });
 })();
 
 $('#burger').addEventListener('click',()=>{const l=$('.nav-links'),o=l.dataset.o==='1';l.dataset.o=o?'0':'1';
