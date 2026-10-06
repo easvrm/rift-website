@@ -243,6 +243,8 @@ input::placeholder,textarea::placeholder{color:rgba(34,43,62,.4)}
   .team-grid{grid-template-columns:repeat(2,1fr)}
   .nav-links,.index{display:none}.burger{display:flex}
 }
+/* expertise + value: align card texts across a row, whatever the title wraps to */
+@media(min-width:561px){#expertise .g4>.card{display:grid;grid-template-rows:subgrid;grid-row:span 4;row-gap:0;align-content:start}#value .g4>.card{display:grid;grid-template-rows:subgrid;grid-row:span 3;row-gap:0;align-content:start}}
 @media(max-width:560px){.wrap{padding:0 22px}.nav{padding:14px 22px}.kpis,.g4,.g3,.g2,.matrix,.team-grid,.field-row{grid-template-columns:1fr}.kpi{border-right:0;border-bottom:1px solid var(--line)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.rift-line{stroke-dashoffset:0}}
 /* impact */
